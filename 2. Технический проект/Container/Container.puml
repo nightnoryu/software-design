@@ -1,0 +1,19 @@
+@startuml Container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+
+!include DEVICONS/go.puml
+!include FONTAWESOME/users.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(users, "Users", "Regular users, traders, investors", $sprite="users")
+Person(regulator, "Regulator", "Check for suspicious transactions")
+Person(admin, "Admin", "Monitor operations")
+
+System_Boundary(system, "Currency App") {
+  Container(user_service, "user", "Go", "Manages users data", $sprite="go")
+  Container(message_bus, "Message Bus", "RabbitMQ", "Transport for business events")
+}
+@enduml

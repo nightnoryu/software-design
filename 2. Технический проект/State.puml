@@ -1,7 +1,4 @@
-# State
-
-```plantuml
-@startuml
+@startuml State Diagram
 state "Транзакции" as Transaction
 state "Подтвреждение" as Approval
 state "Регулятор" as Regulator
@@ -16,6 +13,3 @@ Regulator --> Failure : Нежелательная транзакция
 Regulator --> Finished : Транзакция успешно проведена
 Finished --> [*]
 @enduml
-```
-
-![](../img/state.png)
