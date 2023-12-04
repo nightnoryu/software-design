@@ -1,17 +1,32 @@
 @startuml Infrastructure Diagram
 [Mobile App]
-package "k3s cluster" {
-    package "Currency App" {
-        [Database]
+package "Currency App" {
+    package "api-gateway" {
+        [Frontend server]
         [API Gateway]
-        [Monolith]
+    }
+    package "regulator" {
+        [Api]
+        [App]
+        [Infrastructure]
+        [Domain]
+        [Database]
+    }
+    package "rates" {
+        [Rates]
+    }
+    package "user" {
+        [User]
+    }
+    package "wallet" {
+        [Wallet]
+    }
+    package "transaction" {
+        [Transaction]
     }
     package "registry" {
         [docker-registry]
         [docker-registry-auth-proxy]
-    }
-    package "s3-storage" {
-        [S3 storage] as Minio
     }
     package "rancher" {
         [Rancher]
@@ -22,18 +37,26 @@ package "k3s cluster" {
 
 [docker-registry-auth-proxy] --> [docker-registry]
 
+[Api] --> [App]
+[App] --> [Infrastructure]
+[App] --> [Domain]
+[Infrastructure] --> [Domain]
+[Infrastructure] --> [Database]
+
 [Ingress Controller] --> [docker-registry-auth-proxy]
-[Ingress Controller] --> [Minio]
-[Ingress Controller] --> [API Gateway]
+[Ingress Controller] --> [api-gateway]
+[Ingress Controller] --> [Frontend server]
 
-[API Gateway] --> [Monolith]
+[api-gateway] --> [API Gateway]
+[API Gateway] --> [regulator]
+[API Gateway] --> [rates]
+[API Gateway] --> [user]
+[API Gateway] --> [wallet]
+[API Gateway] --> [transaction]
 
-[Monolith] --> [Database]
 
-
-actor User
-[User] --> [Mobile App]
-[Mobile App] --> [Ingress Controller]
+actor Client
+[Client] --> [Ingress Controller]
 
 actor Developer
 [Developer] --> [Rancher]
