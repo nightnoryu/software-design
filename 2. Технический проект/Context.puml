@@ -10,7 +10,13 @@ Person(admin, "Admin", "Monitor operations")
 
 Container(currency_app, "Currency App", "Handles users' data, stock rates and transactions business logic")
 
+System_Ext(rates_provider, "Exchange rates provider")
+System_Ext(bank, "Banking system")
+
 Rel(users, currency_app, "Exchange currencies, monitor changes", "https")
 Rel(regulator, currency_app, "Get reports, approve or decline suspicious transactions", "https")
 Rel(admin, currency_app, "Update stock rates, monitor operations", "https")
+
+Rel(currency_app, rates_provider, "Gets exchange rates", "https")
+Rel(currency_app, bank, "Transfer money to and from users bank account", "https")
 @enduml

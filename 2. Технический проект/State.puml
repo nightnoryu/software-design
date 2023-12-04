@@ -4,6 +4,7 @@ state "Подтвреждение" as Approval
 state "Регулятор" as Regulator
 state "Отказ" as Failure
 state "Завершен" as Finished
+
 [*] --> NewRequest
 NewRequest --> Transaction : Клиент создал транзакцию
 Transaction --> Approval : Транзакция моментально подтверждена
