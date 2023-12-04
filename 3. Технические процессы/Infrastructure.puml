@@ -1,5 +1,4 @@
 @startuml Infrastructure Diagram
-[Mobile App]
 package "Currency App" {
     package "api-gateway" {
         [Frontend server]
@@ -33,6 +32,7 @@ package "Currency App" {
     }
     [Ingress Controller]
     [Kubeapi]
+    [RabbitMQ]
 }
 
 [docker-registry-auth-proxy] --> [docker-registry]
@@ -54,6 +54,12 @@ package "Currency App" {
 [API Gateway] --> [wallet]
 [API Gateway] --> [transaction]
 
+[RabbitMQ] -> [regulator]
+[regulator] -> [RabbitMQ]
+[RabbitMQ] -> [rates]
+[rates] -> [RabbitMQ]
+[RabbitMQ] -> [transaction]
+[transaction] -> [RabbitMQ]
 
 actor Client
 [Client] --> [Ingress Controller]
