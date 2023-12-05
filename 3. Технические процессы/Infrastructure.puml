@@ -1,4 +1,4 @@
-@startuml Infrastructure Diagram
+@startuml
 package "Currency App" {
     package "api-gateway" {
         [Frontend server]
@@ -48,18 +48,18 @@ package "Currency App" {
 [Ingress Controller] --> [Frontend server]
 
 [api-gateway] --> [API Gateway]
-[API Gateway] --> [regulator]
+[API Gateway] ---> [regulator]
 [API Gateway] --> [rates]
 [API Gateway] --> [user]
 [API Gateway] --> [wallet]
-[API Gateway] --> [transaction]
+[API Gateway] ---> [transaction]
 
-[RabbitMQ] -> [regulator]
-[regulator] -> [RabbitMQ]
-[RabbitMQ] -> [rates]
-[rates] -> [RabbitMQ]
-[RabbitMQ] -> [transaction]
-[transaction] -> [RabbitMQ]
+[RabbitMQ] --> [regulator]
+[regulator] --> [RabbitMQ]
+[RabbitMQ] --> [rates]
+[rates] --> [RabbitMQ]
+[RabbitMQ] --> [transaction]
+[transaction] --> [RabbitMQ]
 
 actor Client
 [Client] --> [Ingress Controller]
