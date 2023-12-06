@@ -1,4 +1,4 @@
-@startuml Container
+@startuml Container Diagram
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
 !define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
@@ -71,5 +71,4 @@ Rel_L(rates_service, rates_provider, "select current rates")
 
 Lay_D(user_db, message_bus)
 Lay_R(wallet_db, user_db)
-
 @enduml

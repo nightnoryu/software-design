@@ -1,4 +1,4 @@
-@startuml Component
+@startuml Component Diagram
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
@@ -52,8 +52,4 @@ Lay_R(repo, publisher)
 Lay_U(App, API)
 Lay_U(Domain, App)
 Lay_U(Infasrtucture, Domain)
-
-
-
-
 @enduml

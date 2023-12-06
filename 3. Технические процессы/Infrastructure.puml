@@ -1,4 +1,4 @@
-@startuml
+@startuml Infrastructure Diagram
 package "Currency App" {
     package "api-gateway" {
         [Frontend server]
