@@ -1,0 +1,74 @@
+@startuml Container Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+
+!include DEVICONS/go.puml
+!include DEVICONS/react.puml
+!include FONTAWESOME/users.puml
+!include <logos/kotlin>
+!include <logos/rabbitmq>
+!include <logos/mysql>
+
+LAYOUT_WITH_LEGEND()
+
+Person(users, "Users", "Regular users, traders, investors", $sprite="users")
+Person(regulator, "Regulator", "Check for suspicious transactions")
+Person(admin, "Admin", "Monitor operations")
+
+System_Boundary(system, "Currency App") {
+  Container(api_gateway, "APIGateway", "GO", "Manages traffic", $sprite="go")
+  Container(frontend_app, "Frontend", "React", "App UI", $sprite="react")
+  Container(mobile_app, "Mobile app", "Kotlin", "application for users", $sprite="kotlin")
+  
+  Container(user_service, "User", "Go", "Manages users data", $sprite="go")  
+  Container(regulator_service, "Regulator", "Go", "Manages specific transactions", $sprite="go")
+  Container(rates_service, "Rates", "GO", "Updates and provide rates", $sprite="go")
+  Container(wallet_service, "Wallet", "GO", "Reserve comapny money", $sprite="go")
+  Container(transaction_service, "Transaction", "GO", "Create, approve and cancel transactions. Sync with bankin system", $sprite="go")
+  
+  Container(message_bus, "Message Bus", "RabbitMQ", "Transport for business events", $sprite="rabbitmq")
+  
+  ContainerDb(regulator_db, "Regulator DB", "MySQL", "Store information about specific transaction and its statuses", $sprite="mysql")
+  ContainerDb(rates_db, "Rates DB", "MySQL", "Store current rates and rates history", $sprite="mysql")  
+  ContainerDb(user_db, "User DB", "MySQL", "Store users data", $sprite="mysql")  
+  ContainerDb(wallet_db, "Wallet DB", "MySQL", "Store wallet data", $sprite="mysql")  
+  ContainerDb(transaction_db, "Transaction DB", "MySQL", "Store transactions data", $sprite="mysql")  
+}
+
+System_Ext(rates_provider, "Exchange rates provider")
+System_Ext(bank, "Banking system")
+
+Rel(users, mobile_app, "")
+Rel(users, frontend_app, "")
+Rel(regulator, frontend_app, "")
+Rel(admin, frontend_app, "")
+
+Rel(frontend_app, api_gateway, "", "https")
+Rel(mobile_app, api_gateway, "", "https")
+
+Rel(api_gateway, user_service, "", "grpc")
+Rel(api_gateway, regulator_service, "", "grpc")
+Rel_L(api_gateway, rates_service, "", "grpc")
+Rel_R(api_gateway, wallet_service, "", "grpc")
+Rel(api_gateway, transaction_service, "", "grpc")
+
+Rel(user_service, user_db, "")
+Rel(regulator_service, regulator_db, "")
+Rel(rates_service, rates_db, "")
+Rel(wallet_service, wallet_db, "")
+Rel(transaction_service, transaction_db, "")
+
+Rel(user_service, message_bus, "")
+Rel(regulator_service, message_bus, "")
+Rel(rates_service, message_bus, "")
+Rel(wallet_service, message_bus, "")
+Rel(transaction_service, message_bus, "")
+
+Rel(transaction_service, bank, "create, approve and cancel transactions")
+Rel(wallet_service, bank, "reserve company money")
+Rel_L(rates_service, rates_provider, "select current rates")
+
+Lay_D(user_db, message_bus)
+Lay_R(wallet_db, user_db)
+@enduml

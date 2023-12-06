@@ -1,0 +1,55 @@
+@startuml Component Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+
+
+System_Boundary(system, "Microservice") {
+    Boundary(API, "API") {
+        Component(api, "API")
+    }
+    Boundary(App, "App") {
+        Component(service, "Service", "", "Create commands")
+        Component(query, "Query", "", "Create queries")
+        Component(handler, "Event handler", "", "Handle events")
+    }
+    Boundary(Domain, "Domain") {
+        Component(model, "Model", "", "Contains business logic")
+        Component(repo, "Repository", "interface", "Provides interface to store model")
+        Component(publisher, "Event publisher", "interface", "Provides interface to publish domain events")
+    }
+    Boundary(Infasrtucture, "Infasrtucture") {
+        Component(database, "Database", "", "Create requests to database")
+        Component(message_bus, "Message Bus manager", "", "publish and read messages from queues")
+    }
+}
+
+Component_Ext(db, "Database conatiner")
+Component_Ext(msg_bus, "Message bus conatiner")
+
+Rel(api, service, "")
+Rel(api, query, "")
+
+Rel(service, model, "")
+
+Rel(database, db, "")
+Rel(message_bus, msg_bus, "")
+
+Rel(model, repo, "")
+Rel(model, publisher, "")
+
+Rel(repo, database, "")
+Rel(query, database, "")
+
+Rel(handler, message_bus, "")
+Rel(publisher, message_bus, "")
+
+Lay_R(service, query)
+Lay_R(query, handler)
+Lay_R(repo, publisher)
+
+Lay_U(App, API)
+Lay_U(Domain, App)
+Lay_U(Infasrtucture, Domain)
+@enduml
