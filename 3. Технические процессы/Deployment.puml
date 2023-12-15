@@ -1,0 +1,43 @@
+@startuml Deployment Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+
+!include <logos/kotlin>
+!include <logos/go>
+!include <logos/nginx>
+!include <logos/kubernetes>
+!include <logos/rabbitmq>
+!include <logos/mysql>
+
+System(client, "Client App", $sprite="kotlin")
+System(api_gateway, "API Gateway", "Go (Linux)", $sprite="go")
+System(load_balancer, "Load Balancer", "nginx (Linux)", $sprite="nginx")
+
+System(message_bus, "Message Bus", $sprite="rabbitmq")
+
+Deployment_Node(backend_1, "Backend instance 1", "K3S Instance (Linux)", $sprite="kubernetes")
+Deployment_Node(backend_2, "Backend instance 2", "K3S Instance (Linux)", $sprite="kubernetes")
+
+System(database_load_balancer, "Database Load Balancer", "HAProxy (Linux)")
+
+System(master_database, "Master Database", "MySQL (Linux)", $sprite="mysql")
+Deployment_Node(database_1, "Replica 1", "MySQL (Linux)", $sprite="mysql")
+Deployment_Node(database_2, "Replica 2", "MySQL (Linux)", $sprite="mysql")
+
+client --> api_gateway : HTTPS
+api_gateway --> load_balancer : HTTPS
+
+load_balancer --> backend_1 : HTTPS
+load_balancer --> backend_2 : HTTPS
+
+backend_1 -> message_bus : AMQP
+backend_2 -> message_bus : AMQP
+
+backend_1 ---> database_load_balancer : TCP
+backend_2 ---> database_load_balancer : TCP
+
+master_database -> database_1 : Replication
+master_database -> database_2 : Replication
+
+database_load_balancer --> database_1 : TCP
+database_load_balancer --> database_2 : TCP
+@enduml
