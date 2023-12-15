@@ -1,0 +1,43 @@
+@startuml Maintenance Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+
+!include <logos/docker>
+!include <logos/kubernetes>
+!include <logos/go>
+
+Person(user, "User")
+
+System_Boundary(development, "Development") {
+  Person(developer, "Developer")
+  System(rancher, "Rancher")
+}
+
+System_Boundary(kubernetes_cluster, "Kubernetes Cluster") {
+  System(controller, "Controller", $sprite="kubernetes")
+  System(nodes, "Nodes", $sprite="go")
+}
+
+System_Boundary(registry, "Registry") {
+  System(registry_auth_proxy, "Auth Proxy")
+  System(docker_registry, "Docker Registry", $sprite="docker")
+}
+
+System_Ext(rates_provider, "Exchange rates provider")
+System_Ext(bank, "Banking system")
+
+user --> nodes
+
+developer --> rancher : deploy
+developer --> registry_auth_proxy : upload image
+
+rancher --> controller
+
+controller --> nodes : deploy
+controller --> docker_registry : fetch image
+
+registry_auth_proxy --> docker_registry : authorize
+
+nodes --> rates_provider
+nodes --> bank
+
+@enduml
