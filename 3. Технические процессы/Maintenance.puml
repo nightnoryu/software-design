@@ -9,7 +9,9 @@ Person(user, "User")
 
 System_Boundary(development, "Development") {
   Person(developer, "Developer")
-  System(rancher, "Rancher")
+  System(VCS, "CodeVCS")
+  System(CI, "CI")
+  System(CD, "CD")
 }
 
 System_Boundary(kubernetes_cluster, "Kubernetes Cluster") {
@@ -27,10 +29,11 @@ System_Ext(bank, "Banking system")
 
 user --> nodes
 
-developer --> rancher : deploy
-developer --> registry_auth_proxy : upload image
-
-rancher --> controller
+developer --> VCS : commit
+VCS --> CI : build
+CI --> CD
+CI --> docker_registry : images
+CD --> controller : deploy
 
 controller --> nodes : deploy
 controller --> docker_registry : fetch image
