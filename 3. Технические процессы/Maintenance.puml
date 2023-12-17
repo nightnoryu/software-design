@@ -9,9 +9,9 @@ Person(user, "User")
 
 System_Boundary(development, "Development") {
   Person(developer, "Developer")
-  System(VCS, "CodeVCS")
-  System(CI, "CI")
-  System(CD, "CD")
+  System(VCS, "CodeVCS", "git")
+  System(CI, "CI", "TeamCity")
+  System(CD, "CD", "Rancher")
 }
 
 System_Boundary(kubernetes_cluster, "Kubernetes Cluster") {

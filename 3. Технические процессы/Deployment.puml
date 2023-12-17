@@ -12,7 +12,7 @@ System(client, "Client App", $sprite="kotlin")
 System(api_gateway, "API Gateway", "Go (Linux)", $sprite="go")
 System(load_balancer, "Load Balancer", "nginx (Linux)", $sprite="nginx")
 
-System(message_bus, "Message Bus", $sprite="rabbitmq")
+System(message_bus, "Message Bus", "RabbitMQ (Linux)", $sprite="rabbitmq")
 
 Deployment_Node(backend_1, "Backend instance 1", "K3S Instance (Linux)", $sprite="kubernetes")
 Deployment_Node(backend_2, "Backend instance 2", "K3S Instance (Linux)", $sprite="kubernetes")
